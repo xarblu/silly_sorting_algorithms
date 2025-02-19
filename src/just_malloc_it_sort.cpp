@@ -28,22 +28,24 @@ int main(int argc, char** argv) {
         std::exit(-1);
     }
 
-    // allocate an new vector with "max" vectors in it
+    // allocate an new vector with "max" counters in it
     // should at worst be O(max)
-    std::vector<std::vector<int>> temp = std::vector<std::vector<int>>();
-    temp.insert(temp.begin(), max, std::vector<int>());
+    std::vector<int> sortmap = std::vector<int>();
+    sortmap.insert(sortmap.begin(), max+1, 0);
 
-    // insert each value in its slot O(n)
+    // increase each values counter by 1 for each occurence
+    // O(n)
     for (int i : input) {
-        temp.at(i-1).push_back(i);
+        sortmap.at(i)++;
     }
 
     // push all non empty vector values in order to output vector O(n)
     std::vector<int> output = std::vector<int>();
-    for (std::vector<int> vec : temp) {
-        for (int i : vec) {
-            output.push_back(i);
+    for (int i = 0; i < sortmap.size(); i++) {
+        if (sortmap.at(i) == 0) {
+            continue;
         }
+        output.insert(output.end(), sortmap.at(i), i);
     }
 
     // print
