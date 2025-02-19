@@ -2,6 +2,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <vector>
+#include <limits>
 
 int main(int argc, char** argv) {
     std::vector<int> input = std::vector<int>();
@@ -15,9 +16,13 @@ int main(int argc, char** argv) {
         }
     }
 
-    // find max value in array in O(n)
-    int max = -1;
+    // find min and max value in array in O(n)
+    int min = std::numeric_limits<int>::max();
+    int max = std::numeric_limits<int>::min();
     for (int i : input) {
+        if (i < min) {
+            min = i;
+        }
         if (i > max) {
             max = i;
         }
@@ -31,12 +36,12 @@ int main(int argc, char** argv) {
     // allocate an new vector with "max" counters in it
     // should at worst be O(max)
     std::vector<int> sortmap = std::vector<int>();
-    sortmap.insert(sortmap.begin(), max+1, 0);
+    sortmap.insert(sortmap.begin(), max-min+1, 0);
 
     // increase each values counter by 1 for each occurence
     // O(n)
     for (int i : input) {
-        sortmap.at(i)++;
+        sortmap.at(i-min)++;
     }
 
     // push all non empty vector values in order to output vector O(n)
@@ -45,7 +50,7 @@ int main(int argc, char** argv) {
         if (sortmap.at(i) == 0) {
             continue;
         }
-        output.insert(output.end(), sortmap.at(i), i);
+        output.insert(output.end(), sortmap.at(i), i+min);
     }
 
     // print
